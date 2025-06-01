@@ -1,0 +1,19 @@
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/spring_batch?useSSL=false&serverTimezone=Asia/Seoul
+        username: root
+        password:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    batch:
+        jdbc:
+            initialize-schema: always
+            platform: mysql
+            isolation-level-for-create: REPEATABLE_READ
+
+        job:
+            name: ${job.name:NONE} # --job.name=helloWorldJob
+            enabled: true
+
+logging:
+    level:
+        org.springframework.batch: INFO
