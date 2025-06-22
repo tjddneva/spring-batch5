@@ -53,14 +53,16 @@ public class PaymentReportJobConfig {
     public Step paymentReportStep(
             JpaPagingItemReader<PaymentSource> paymentReportReader
     ) {
+        // FaultTolerantStepBuilder 을 통해 기본 정책 할당, 기본 Policy 정책, Skip limit
+        // FaultTolerantChunkProcessor 실질적으로 폴트 톨러런스 내결함 성의 관한 내용이 동작합니다.
         return new StepBuilder("paymentReportStep", jobRepository)
                 .<PaymentSource, Payment>chunk(10, transactionManager)
                 .reader(paymentReportReader)
                 .processor(paymentReportProcessor())
                 .writer(paymentReportWriter())
                 .faultTolerant()
-//                .skip(InvalidPaymentAmountException.class) // InvalidPaymentAmountException 예외 발생 시 skip
-//                .skipLimit(2) // 최대 2번까지 skip 허용
+                .skip(InvalidPaymentAmountException.class) // InvalidPaymentAmountException 예외 발생 시 skip
+                .skipLimit(2) // 최대 2번까지 skip 허용
 //                .skipPolicy(new LimitCheckingItemSkipPolicy())
 //                .skipPolicy(new LimitCheckingItemSkipPolicy(
 //                        10, // 최대 10번까지 skip 허용
@@ -96,14 +98,16 @@ public class PaymentReportJobConfig {
     private ItemProcessor<PaymentSource, Payment> paymentReportProcessor() {
         return paymentSource -> {
             // 할인 금액으로 최종 금액이 0원이 케이스 제외
-            if (paymentSource.getFinalAmount().compareTo(BigDecimal.ZERO) == 0) {
-                return null;
-            }
+//            if (paymentSource.getFinalAmount().compareTo(BigDecimal.ZERO) == 0) {
+//                return null;
+//            }
 
-            // 할인 금액이 0이 아닌 경우(양수 또는 음수)
+            // 할인 금액이 0이 아닌 경우(양수 음수)
             if (paymentSource.getDiscountAmount().signum() == -1) {
                 // 할인 금액이 0이 아닌 경우의 처리 로직
-                throw new InvalidPaymentAmountException("할인 금액이 0이 아닌 결제는 처리할 수 없습니다. 현재 할인 금액: " + paymentSource.getDiscountAmount());
+                final String msg = "할인 금액이 0이 아닌 결제는 처리할 수 없습니다. 현재 할인 금액: " + paymentSource.getDiscountAmount();
+                log.error(msg);
+                throw new InvalidPaymentAmountException(msg);
             }
 
             final Payment payment = new Payment(
