@@ -12,8 +12,6 @@ public class PartnerCorporationService {
 
     // 호출 횟수를 추적하는 원자적 카운터 (스레드 안전)
     private int failureCount = 0;
-
-    // 예외 발생 주기 설정 (10번마다 1번)
     private static final String TIMEOUT_ERROR_MESSAGE = "파트너 API 서버 연결 실패: 타임아웃 발생";
     private static final int HTTP_REQUEST_DELAY_MS = 200;
 

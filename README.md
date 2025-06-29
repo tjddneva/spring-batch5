@@ -253,3 +253,36 @@ FROM BATCH_JOB_INSTANCE ji
 where je.JOB_INSTANCE_ID = 12
 ;
 ```
+
+
+## 예제 코드
+
+* Part 1
+  * 1-1
+    * Ch 3. 첫 배치 Job 구현 1
+    * Ch 4. 첫 배치 Job 구현 2
+  * 1-2
+    * Ch 4. Job 핵심 요소, 한 번에 실습하며 이해하기
+  * 1-3
+    * Ch 4. JobInstance와 JobParameter – 중복방지와 실행구조의 이해
+    * Ch 4. Step Tasklet 실습 - 단일 작업 Step 구현하기
+    * Ch 4. Step Chunk 실습 - 반복 처리 Step 구현하기
+  * 1-4
+    * Ch 5. Chunk 처리 개념 - Chunk 처리 방식의 개념 및 장점 
+    * Ch 5. ItemReader - JPA 페이징 처리 
+    * Ch 5. ItemProcessor - 데이터 변환 처리 
+    * Ch 5. ItemWriter - JPA Writer 처리 
+  * 1-5
+    * Ch 6. 예외 처리 전략 skip 실습 - 1
+    * Ch 6. 예외 처리 전략 skip 실습 - 2
+  * 1-6
+    * Ch 6. 예외 처리 전략 retry 실습 - 1
+    * Ch 6. 예외 처리 전략 retry 실습 - 2
+  * 1-7
+    * Ch 6.
+    * Ch 6.
+* Part 2
+* Part 3
+
+
+
