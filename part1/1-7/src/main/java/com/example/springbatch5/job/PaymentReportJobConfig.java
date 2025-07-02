@@ -51,11 +51,15 @@ public class PaymentReportJobConfig {
             JpaPagingItemReader<PaymentSource> paymentReportReader
     ) {
         return new StepBuilder("paymentReportStep", jobRepository)
+                .<PaymentSource, Payment>chunk(20, transactionManager)
                 .listener(new StepDurationTrackerListener())
-                .<PaymentSource, Payment>chunk(10, transactionManager)
                 .reader(paymentReportReader)
                 .processor(paymentReportProcessor())
                 .writer(paymentReportWriter())
+                .listener(new SampleChunkListener())
+                .listener(new SampleItemReadListener())
+                .listener(new SampleItemProcessListener())
+                .listener(new SampleItemWriterListener())
                 .build();
     }
 
@@ -96,4 +100,3 @@ public class PaymentReportJobConfig {
         };
     }
 }
-

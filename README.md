@@ -279,8 +279,9 @@ where je.JOB_INSTANCE_ID = 12
     * Ch 6. 예외 처리 전략 retry 실습 - 1
     * Ch 6. 예외 처리 전략 retry 실습 - 2
   * 1-7
-    * Ch 6.
-    * Ch 6.
+    * Ch 6. JobExecutionListener Job 실행 전후 이벤트 처리
+    * Ch 6. StepExecutionListener: Step 실행 전후 이벤트 처리
+    * Ch 6. ChunkListener: 다양한 Chunk 리스너 살펴보기
 * Part 2
 * Part 3
 
