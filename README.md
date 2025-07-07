@@ -13,10 +13,9 @@ $ docker-compose up -d
 
 * url: jdbc:mysql://localhost:3306/spring_batch
 * username: root
-* password: 
+* password:
 
-
-#### SQL Log 
+#### SQL Log
 
 ```mysql
 show variables like 'general_log%'; # general_log 획인
@@ -254,10 +253,9 @@ where je.JOB_INSTANCE_ID = 12
 ;
 ```
 
-
 ## 예제 코드
 
-* Part 1
+* Part 1. Spring Batch 기초
   * 1-1
     * Ch 3. 첫 배치 Job 구현 1
     * Ch 4. 첫 배치 Job 구현 2
@@ -268,10 +266,10 @@ where je.JOB_INSTANCE_ID = 12
     * Ch 4. Step Tasklet 실습 - 단일 작업 Step 구현하기
     * Ch 4. Step Chunk 실습 - 반복 처리 Step 구현하기
   * 1-4
-    * Ch 5. Chunk 처리 개념 - Chunk 처리 방식의 개념 및 장점 
-    * Ch 5. ItemReader - JPA 페이징 처리 
-    * Ch 5. ItemProcessor - 데이터 변환 처리 
-    * Ch 5. ItemWriter - JPA Writer 처리 
+    * Ch 5. Chunk 처리 개념 - Chunk 처리 방식의 개념 및 장점
+    * Ch 5. ItemReader - JPA 페이징 처리
+    * Ch 5. ItemProcessor - 데이터 변환 처리
+    * Ch 5. ItemWriter - JPA Writer 처리
   * 1-5
     * Ch 6. 예외 처리 전략 skip 실습 - 1
     * Ch 6. 예외 처리 전략 skip 실습 - 2
@@ -282,8 +280,11 @@ where je.JOB_INSTANCE_ID = 12
     * Ch 6. JobExecutionListener Job 실행 전후 이벤트 처리
     * Ch 6. StepExecutionListener: Step 실행 전후 이벤트 처리
     * Ch 6. ChunkListener: 다양한 Chunk 리스너 살펴보기
-* Part 2
-* Part 3
-
+* Part 2. Spring Batch 성능 최적화 기법
+  * 2-1
+    * Ch 1. 성능 분석 및 측정의 기본 개념과 접근 방법 개요
+    * Ch 1. 스프링 배치 Reader 성능 개선 limit offset 방식의 한계 1
+    * Ch 1. 스프링 배치 Reader 성능 개선 limit offset 방식의 한계 2
+* Part 3.
 
 
