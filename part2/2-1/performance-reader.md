@@ -1,7 +1,6 @@
 # Reader Performance 측정
 
-
-## Limit Offset 방식
+## Limit Offset Step 성능 측정
 
 | rows      | 소요 시간      |
 |-----------|------------|
@@ -11,7 +10,11 @@
 | 500,000   | 85,000 ms  |
 | 1,000,000 | 573,000 ms |
 
-### rows 10,000, 소요 시간 503ms
+
+## Limit Offset Chunk 성능 측정
+
+<details>
+<summary>rows 10,000, 전체 소요 시간 503ms</summary>
 
 * Chunk #1, Duration: 241ms
 * Chunk #2, Duration: 29ms
@@ -25,7 +28,10 @@
 * Chunk #10, Duration: 28ms
 * Chunk #11, Duration: 17ms
 
-### rows 50,000, 소요 시간 1.964초
+</details>
+
+<details>
+<summary>rows 50,000, 전체 소요 시간 1.964초</summary>
 
 * Chunk #1, Duration: 243ms
 * Chunk #2, Duration: 24ms
@@ -79,7 +85,10 @@
 * Chunk #50, Duration: 41ms
 * Chunk #51, Duration: 33ms
 
-### rows 100,000, 소요 시간 4.701초
+</details>
+
+<details>
+<summary>rows 100,000, 전체 소요 시간 4.701초</summary>
 
 * Chunk #1, Duration: 216ms
 * Chunk #2, Duration: 21ms
@@ -183,7 +192,10 @@
 * Chunk #100, Duration: 67ms
 * Chunk #101, Duration: 59ms
 
-### rows 500,000, 소요 시간 1분 25초
+</details>
+
+<details>
+<summary>rows 500,000, 전체 소요 시간 1분 25초</summary>
 
 * Chunk #1, Duration: 236ms
 * Chunk #2, Duration: 21ms
@@ -687,8 +699,10 @@
 * Chunk #500, Duration: 365ms
 * Chunk #501, Duration: 362ms
 
+</details>
 
-### rows 1,000,000, 소요 시간 9분 33초
+<details>
+<summary>rows 1,000,000, 전체 소요 시간 9분 33초</summary>
 
 * Chunk #1, Duration: 250ms
 * Chunk #2, Duration: 25ms
@@ -1690,3 +1704,5 @@
 * Chunk #998, Duration: 2235ms
 * Chunk #999, Duration: 2233ms
 * Chunk #1000, Duration: 2278ms
+
+</details>
