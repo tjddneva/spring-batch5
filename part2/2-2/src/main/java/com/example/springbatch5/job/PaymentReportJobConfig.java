@@ -77,17 +77,22 @@ public class PaymentReportJobConfig {
     }
 
     /**
-     * ItemReader를 생성하고 Bean으로 등록하는 메소드입니다. (이전 답변과 동일)
+     * No Offset 기반의 ItemReader를 생성합니다.
+     * 이 리더는 대용량 데이터 처리에 대한 성능 저하를 방지하기 위해 페이지 오프셋을 사용하지 않습니다.
+     * 대신, 마지막으로 읽은 항목의 ID를 사용하여 다음 페이지를 조회합니다 (seek-method).
+     * 'idExtractor'를 통해 각 항목의 고유 ID를 추출하고, 이를 정렬 및 다음 페이지 조회 조건에 사용합니다.
+     *
+     * @param paymentDate JobParameter로 전달받은 조회할 결제 날짜
+     * @return NoOffsetItemReader 인스턴스
      */
     @Bean
     @StepScope
     public NoOffsetItemReader<PaymentSource> noOffsetItemReader(
             @Value("#{jobParameters['paymentDate']}") LocalDate paymentDate
     ) {
-        // ... 빌더를 사용한 생성 로직 ...
         return new NoOffsetItemReaderBuilder<PaymentSource>()
                 .entityManagerFactory(entityManagerFactory)
-                .queryString("SELECT ps FROM PaymentSource ps WHERE ps.paymentDate = :paymentDate and ps.id > :lastId order by ps.id asc")
+                .queryString("SELECT ps FROM PaymentSource ps WHERE ps.paymentDate = :paymentDate ORDER BY ps.id DESC")
                 .parameterValues(Collections.singletonMap("paymentDate", paymentDate))
                 .pageSize(chunkSize)
                 .name("noOffsetItemReader")
