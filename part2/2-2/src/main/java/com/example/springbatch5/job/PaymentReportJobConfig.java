@@ -94,7 +94,7 @@ public class PaymentReportJobConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT ps FROM PaymentSource ps WHERE ps.paymentDate = :paymentDate ORDER BY ps.id DESC")
                 .parameterValues(Collections.singletonMap("paymentDate", paymentDate))
-                .pageSize(chunkSize)
+                .chunkSize(chunkSize)
                 .name("noOffsetItemReader")
                 .idExtractor(PaymentSource::getId)
                 .targetType(PaymentSource.class)

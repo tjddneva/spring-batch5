@@ -16,7 +16,7 @@ import java.util.function.Function;
 public class NoOffsetItemReaderBuilder<T> {
 
     private EntityManagerFactory entityManagerFactory;
-    private int pageSize = 100; // 기본 페이지 크기
+    private int chunkSize;
     private String queryString;
     private Map<String, Object> parameterValues = new HashMap<>();
     private Function<T, Long> idExtractor;
@@ -45,11 +45,11 @@ public class NoOffsetItemReaderBuilder<T> {
 
     /**
      * 페이지 크기를 설정합니다. 한 번에 읽어올 아이템의 수입니다.
-     * @param pageSize 페이지 크기
+     * @param chunkSize 페이지 크기
      * @return 빌더 인스턴스
      */
-    public NoOffsetItemReaderBuilder<T> pageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public NoOffsetItemReaderBuilder<T> chunkSize(int chunkSize) {
+        this.chunkSize = chunkSize;
         return this;
     }
 
@@ -100,20 +100,21 @@ public class NoOffsetItemReaderBuilder<T> {
      * @return NoOffsetItemReader 인스턴스
      */
     public NoOffsetItemReader<T> build() {
-        Assert.state(entityManagerFactory != null, "EntityManagerFactory is required.");
-        Assert.state(queryString != null, "Query string is required.");
-        Assert.state(idExtractor != null, "ID extractor function is required.");
-        Assert.state(targetType != null, "Target type is required.");
+        Assert.notNull(entityManagerFactory, "EntityManagerFactory is required.");
+        Assert.notNull(queryString, "Query string is required.");
+        Assert.notNull(idExtractor, "ID extractor function is required.");
+        Assert.notNull(targetType, "Target type is required.");
+        Assert.notNull(name, "name is required.");
+        Assert.state(chunkSize > 0, "chunkSize must be greater than 0.");
 
-        NoOffsetItemReader<T> reader = new NoOffsetItemReader<>(
+        return new NoOffsetItemReader<>(
                 this.entityManagerFactory,
                 this.queryString,
                 this.parameterValues,
-                this.pageSize,
+                this.chunkSize,
                 this.idExtractor,
-                this.targetType
+                this.targetType,
+                this.name
         );
-        reader.setName(this.name); // 배치 메타데이터 관리를 위한 이름 설정
-        return reader;
     }
 }

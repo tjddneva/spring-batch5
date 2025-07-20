@@ -27,15 +27,13 @@ public class NoOffsetItemReader<T> implements ItemStreamReader<T> {
     private EntityManager entityManager;
     private final String queryString;
     private final Map<String, Object> parameterValues;
-    private final int pageSize;
+    private final int chunkSize;
     private final Function<T, Long> idExtractor; // 조회된 엔티티에서 ID를 추출하는 함수
     private Long firstId; // 현재 페이지의 시작 ID
     private final Queue<T> buffer = new LinkedList<>(); // 조회된 데이터를 임시 저장하는 버퍼
     private boolean isEnd = false; // 모든 데이터를 다 읽었는지 여부
     private final Class<T> targetType; // 조회할 엔티티의 클래스 타입
-    @Getter
-    @Setter
-    private String name;
+    private final String name;
 
     /**
      * NoOffsetItemReader 생성자.
@@ -43,7 +41,7 @@ public class NoOffsetItemReader<T> implements ItemStreamReader<T> {
      * @param entityManagerFactory JPA EntityManagerFactory
      * @param queryString          조회 JPQL 쿼리
      * @param parameterValues      쿼리 파라미터
-     * @param pageSize             페이지 사이즈
+     * @param chunkSize             페이지 사이즈
      * @param idExtractor          엔티티에서 ID를 추출하는 함수
      * @param targetType           조회할 엔티티의 클래스 타입
      */
@@ -51,16 +49,18 @@ public class NoOffsetItemReader<T> implements ItemStreamReader<T> {
             EntityManagerFactory entityManagerFactory,
             String queryString,
             Map<String, Object> parameterValues,
-            int pageSize,
+            int chunkSize,
             Function<T, Long> idExtractor,
-            Class<T> targetType
+            Class<T> targetType,
+            String name
     ) {
         this.entityManagerFactory = entityManagerFactory;
         this.queryString = queryString;
         this.parameterValues = parameterValues;
-        this.pageSize = pageSize;
+        this.chunkSize = chunkSize;
         this.idExtractor = idExtractor;
         this.targetType = targetType;
+        this.name = name;
     }
 
     /**
@@ -83,15 +83,14 @@ public class NoOffsetItemReader<T> implements ItemStreamReader<T> {
                     .createQuery(queryString, this.targetType)
                     .setMaxResults(1);
             parameterValues.forEach(query::setParameter);
+            List<T> results = query.getResultList();
 
-            List<T> resultList = query.getResultList();
-
-            if (resultList.isEmpty()) {
+            if (results.isEmpty()) {
                 // 조회 결과가 없으면 firstId를 0으로 설정
                 this.firstId = 0L;
             } else {
                 // 가장 큰 ID + 1을 시작점으로 설정하여 모든 데이터를 포함하도록 함
-                this.firstId = idExtractor.apply(resultList.get(0)) + 1;
+                this.firstId = idExtractor.apply(results.get(0)) + 1;
             }
         }
     }
@@ -121,22 +120,21 @@ public class NoOffsetItemReader<T> implements ItemStreamReader<T> {
 
         TypedQuery<T> query = entityManager
                 .createQuery(queryWithNoOffset, this.targetType) // 최종적으로 조립된 쿼리를 사용합니다.
-                .setMaxResults(this.pageSize);
+                .setMaxResults(this.chunkSize);
 
         // 외부에서 주입된 파라미터 설정 (e.g., paymentDate)
         parameterValues.forEach(query::setParameter);
         // 내부 상태인 firstId 파라미터 설정
         query.setParameter("firstId", this.firstId);
 
-        List<T> resultList = query.getResultList();
-
-        if (resultList.isEmpty()) {
+        List<T> results = query.getResultList();
+        if (results.isEmpty()) {
             // 조회 결과가 없으면 더 이상 읽을 데이터가 없음을 표시
             this.isEnd = true;
         } else {
             // 조회된 데이터를 버퍼에 추가하고, 다음 페이지 조회를 위해 firstId를 업데이트
-            buffer.addAll(resultList);
-            this.firstId = idExtractor.apply(resultList.get(resultList.size() - 1));
+            buffer.addAll(results);
+            this.firstId = idExtractor.apply(results.get(results.size() - 1));
         }
     }
 
