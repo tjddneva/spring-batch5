@@ -14,7 +14,6 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaCursorItemReader;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
@@ -29,7 +28,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 @Configuration
 @AllArgsConstructor
-public class UserGradleApplyJobConfiguration {
+public class UserGradeApplyJobConfiguration {
 
     private final EntityManagerFactory entityManagerFactory;
     private final JobRepository jobRepository;
@@ -78,6 +77,7 @@ public class UserGradleApplyJobConfiguration {
     public ItemProcessor<User, User> processor() {
         return user -> {
             // user 등급 조회 API 150ms 으로 고정
+            // order api에서 계산된 유저의 등급정보를 유저 객체에 반영
             final Grade grade = orderClient.getGrade(user.getId());
             user.setGrade(grade);
             return user;
