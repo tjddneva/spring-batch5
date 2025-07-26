@@ -94,9 +94,3 @@ CALL sp_insert_user_batch(10000);
 
 -- 50,000건 데이터 삽입
 CALL sp_insert_user_batch(50000);
-
--- 100,000건 데이터 삽입
-CALL sp_insert_user_batch(100000);
-
--- 500,000건 데이터 삽입
-CALL sp_insert_user_batch(500000);
