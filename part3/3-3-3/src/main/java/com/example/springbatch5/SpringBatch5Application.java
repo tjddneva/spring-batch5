@@ -1,0 +1,14 @@
+package com.example.springbatch5;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
+@SpringBootApplication
+@EnableConfigurationProperties(ArgumentProperties.class)
+public class SpringBatch5Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBatch5Application.class, args);
+	}
+}
